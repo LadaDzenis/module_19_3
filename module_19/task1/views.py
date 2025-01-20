@@ -1,26 +1,22 @@
 from django.shortcuts import render
 from .forms import UserRegister
 from django.http import HttpResponse
+from .models import *
 
 
 # Create your views here.
 def index(request):
-    return render(request, 'masloDzen.html')
+    return render(request, 'gamesDzen.html')
 
-def price(request):
-    context  = {
-        'price': ['Подсолнечное масло (250 мл.) - 280 руб.',
-          'Льняное масло (250 мл.) - 310 руб.',
-          'Масло грецкого ореха (250 мл.) - 750 руб.',
-          'Масло конопляного семени (250 мл.) - 950 руб.']
-    }
-    return render(request, 'prices_maslo.html', context)
+def games(request):
+    games = Game.objects.all()
+    context  = {'games': games}
+    return render(request, 'prices_games.html', context)
 
 def disc(request):
-    return render(request, 'description_maslo.html')
+    return render(request, 'description_games.html')
 
-
-users = ['Lada', 'Nik', 'Varvara']
+buyers = Buyer.objects.all()
 
 # Create your views here.
 def sign_up_by_django(request):
@@ -33,9 +29,9 @@ def sign_up_by_django(request):
             repeat_password = form.cleaned_data['repeat_password']
             age = form.cleaned_data['age']
 
-            if password == repeat_password and age >= 18 and username not in users:
-                users.append(username)
-                print(users)
+            if password == repeat_password and age >= 18 and username not in buyers:
+                buyers.append(username)
+                print(buyers)
                 return HttpResponse(f'Приветствуем, {username}!')
             elif password != repeat_password:
                 info['error']='Пароли не совпадают'
@@ -45,10 +41,13 @@ def sign_up_by_django(request):
                 info['error'] = 'Вы должны быть старше 18'
                 print(info)
                 return HttpResponse(f'Вы должны быть старше 18')
-            elif username in users:
+            elif username in buyers:
                 info['error'] = 'Пользователь уже существует'
                 print(info)
                 return HttpResponse(f'Пользователь уже существует')
+            else:
+                Buyer.objects.create(name=username, balance=0, age=age)
+                return render(request, 'registration_page.html', {'message': f'Приветствуем, {username}!'})
     else:
         form = UserRegister()
         context = {'info': info, 'form': form}
@@ -67,9 +66,9 @@ def sign_up_by_html(request):
         print(f'Повтор пароля: {repeat_password}')
         print(f'Возвраст: {age}')
 
-        if password == repeat_password and age >= 18 and username not in users:
-            users.append(username)
-            print(users)
+        if password == repeat_password and age >= 18 and username not in buyers:
+            buyers.append(username)
+            print(buyers)
             return HttpResponse(f'Приветствуем, {username}!')
         elif password != repeat_password:
             info['error'] = 'Пароли не совпадают'
@@ -79,8 +78,12 @@ def sign_up_by_html(request):
             info['error'] = 'Вы должны быть старше 18'
             print(info)
             return HttpResponse(f'Вы должны быть старше 18')
-        elif username in users:
+        elif any(buyer.name == username for buyer in buyers):
             info['error'] = 'Пользователь уже существует'
             print(info)
             return HttpResponse(f'Пользователь уже существует')
+        else:
+            Buyer.objects.create(name=username, balance=0, age=age)
+            return render(request, 'registration_page.html', {'message': f'Приветствуем, {username}!'})
+
     return render(request, 'registration_page.html', info)

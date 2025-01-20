@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', sign_up_by_django),
     path('django_sign_up/', sign_up_by_html),
-    path('maslo/', index),
-    path('masloDzen/prices/', price),
-    path('masloDzen/discription/', disc),
+    path('games/', index),
+    path('gamesDzen/prices/', games),
+    path('gamesDzen/description/', disc),
 ]

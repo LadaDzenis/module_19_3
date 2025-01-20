@@ -18,7 +18,7 @@ class Game(models.Model):
     buyer = models.ManyToManyField(Buyer)
 
     def __str__(self):
-        return self.title
+        return self.title, self.description, self.cost
 
 
 # Create your models here.
