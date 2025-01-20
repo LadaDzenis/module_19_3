@@ -1,0 +1,39 @@
+'''
+список QuerySet запросов в порядке вызовов,
+которые использовали для внесения изменений в БД
+'''
+.venv/Scripts/activate
+pip install django
+django-admin startproject module_19
+cd module_19
+python manage.py startapp task1
+
+python manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py shell
+
+>>>from task1.models import Buyer
+>>> Buyer.objects.create(name='Lada', balance=10000, age=25)
+>>> Buyer.objects.create(name='Nik', balance=20000, age=35)
+>>> Buyer.objects.create(name='Varvara', balance=2000, age=14)
+>>> Buyer.objects.all()
+>>> from task1.models import Game
+>>> Game.objects.create(title='Игра престолов',
+cost=2500, size=75, description='Самая популярная игра в
+нашем разделе, по приемлемой цене', age_limited=True)
+>>> Game.objects.create(title='Три кота', cost=1000, size=50,
+description='Детская игра без ограничения по возврасту',
+age_limited=False)
+>>> Game.objects.create(title='Dota', cost=5000, size=41.43,
+description='командная игра жанра стратегия в реальном
+времени с элементами компьютерной ролевой игры',
+age_limited=True)
+>>> from task1.models import Buyer
+>>> Lada = Buyer.objects.get(name='Lada')
+>>> Nik = Buyer.objects.get(name='Nik')
+>>> Varvara = Buyer.objects.get(name='Varvara')
+>>> Game.objects.get(id=1).buyer.set([Lada, Nik])
+>>> Game.objects.get(id=2).buyer.set([Varvara, Nik])
+>>> Game.objects.get(id=3).buyer.set([Lada, Nik])

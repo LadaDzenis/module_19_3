@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+ <pagename>
+        {% block pagename %}
+        <h1>Добро пожаловать на главную страницу</h1>
+        {% endblock %}
+    </pagename>
+
+    <menu>
+        {% block menu %}
+        <ul>
+            <li> <a href="/maslo/"> Главная</a> </li>
+            <br>
+            <li> <a href="/masloDzen/prices/"> Цены</a> </li>
+            <br>
+            <li> <a href="/masloDzen/discription/"> Описание</a> </li>
+        </ul>
+        {% endblock %}
+    </menu>
+
+    <content>
+            {% block content %}
+            <p></p>
+            {% endblock %}
+        </content>
+
+</body>
+</html>
